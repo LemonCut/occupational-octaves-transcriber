@@ -1,0 +1,18 @@
+{
+  "name": "occupational-octaves-transcriber",
+  "version": "0.1.0",
+  "description": "Occupational Octaves notation transcriber and PDF generator",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}
