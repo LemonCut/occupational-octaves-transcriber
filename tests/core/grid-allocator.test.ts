@@ -34,4 +34,41 @@ describe('Grid Allocator', () => {
     expect(cell1.rightHand.glyphs[0].kind).toBe('arrow');
     expect(cell1.leftHand.glyphs).toHaveLength(0);
   });
+
+  it('orders sustain arrows so higher pitch is the higher arrow (verticalSlot 0)', () => {
+    const score: Score = {
+      metadata: { timeSignature: [4, 4] },
+      measures: [
+        {
+          number: 1,
+          rightHand: [
+            // Lower note B4 with finger 1 (Pink), Higher note D5 with finger 3 (Orange)
+            { offset: 0.0, duration: 1.0, notes: ['B4', 'D5'], fingers: [1, 3] }
+          ],
+          leftHand: []
+        }
+      ]
+    };
+
+    const pages = allocateScore(score);
+    const cell1 = pages[0].systems[0].cells[1];
+    expect(cell1.rightHand.glyphs).toHaveLength(2);
+
+    const arrow0 = cell1.rightHand.glyphs[0];
+    const arrow1 = cell1.rightHand.glyphs[1];
+
+    // slot 0 is the top arrow, and must correspond to higher pitch D5 (finger 3 = Orange)
+    expect(arrow0).toEqual({
+      kind: 'arrow',
+      color: '#FB8C00', // Orange (D5)
+      verticalSlot: 0
+    });
+
+    // slot 1 is the bottom arrow, and must correspond to lower pitch B4 (finger 1 RH = Pink)
+    expect(arrow1).toEqual({
+      kind: 'arrow',
+      color: '#EC407A', // Pink (B4)
+      verticalSlot: 1
+    });
+  });
 });

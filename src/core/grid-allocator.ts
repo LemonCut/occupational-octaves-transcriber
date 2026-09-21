@@ -2,6 +2,7 @@ import { Score, NoteEvent } from '../types/score.js';
 import { Page, System, GridCell, CellGlyph } from '../types/layout.js';
 import { layoutHandCell } from './layout-engine.js';
 import { resolveFingerings, getFingerColor } from './fingering.js';
+import { pitchToMidi } from './pitch-mapper.js';
 
 export function determineBaseSubdivision(score: Score): number {
   if (score.metadata.baseSubdivision) return score.metadata.baseSubdivision;
@@ -40,13 +41,21 @@ export function allocateScore(score: Score): Page[] {
         }
 
         // Add sustain arrows in subsequent cells
+        // Sorted descending by pitch: slot 0 = highest pitch (top arrow), slot 1 = lower (bottom arrow)
+        const sortedNotes = ev.notes.map((p, i) => ({
+          pitch: p,
+          finger: fingers[i] ?? 1,
+          midi: pitchToMidi(p)
+        })).sort((a, b) => b.midi - a.midi);
+
         for (let s = 1; s < span && startCell + s < cellsPerMeasure; s++) {
-          for (let n = 0; n < ev.notes.length; n++) {
-            const color = getFingerColor(fingers[n], hand);
+          for (let slot = 0; slot < sortedNotes.length; slot++) {
+            const item = sortedNotes[slot];
+            const color = getFingerColor(item.finger, hand);
             slots[startCell + s].push({
               kind: 'arrow',
               color,
-              verticalSlot: n
+              verticalSlot: slot
             });
           }
         }
