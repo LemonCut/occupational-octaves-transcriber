@@ -40,14 +40,14 @@ function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: n
   for (const g of glyphs) {
     if (g.kind === 'arrow') {
       // Scale arrow based on whether single or stacked
-      let arrowWidth = 34;
+      let arrowWidth = 44;
       let targetCenterY = y + h / 2;
 
       if (arrowCount === 2) {
-        arrowWidth = 28;
+        arrowWidth = 36;
         targetCenterY = g.verticalSlot === 0 ? y + h * 0.35 : y + h * 0.65;
       } else if (arrowCount >= 3) {
-        arrowWidth = 24;
+        arrowWidth = 30;
         if (g.verticalSlot === 0) targetCenterY = y + h * 0.22;
         else if (g.verticalSlot === 1) targetCenterY = y + h * 0.50;
         else targetCenterY = y + h * 0.78;

@@ -5,14 +5,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsx scripts/sync-arrow.ts && tsc",
     "test": "vitest run",
-    "demo": "tsx examples/generate-demo.ts"
+    "sync-arrow": "tsx scripts/sync-arrow.ts",
+    "demo": "tsx scripts/sync-arrow.ts && tsx examples/generate-demo.ts"
   },
   "dependencies": {
     "pdf-lib": "^1.17.1"
   },
   "devDependencies": {
+    "@types/node": "^26.6.2",
     "tsx": "^4.23.15",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
