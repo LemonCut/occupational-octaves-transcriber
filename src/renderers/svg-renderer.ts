@@ -1,5 +1,6 @@
 import { Page, CellGlyph } from '../types/layout.js';
 import { ARROW_SVG_PATH, ARROW_METRICS, PAGE_METRICS } from './arrow.js';
+import { FONT_METRICS } from './typography.js';
 
 export function renderPageToSvg(page: Page): string {
   const { pageWidth, pageHeight, margin, systemHeight, systemGap, colWidth, halfCellHeight } = PAGE_METRICS;
@@ -63,44 +64,45 @@ function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: n
     } else if (g.kind === 'note') {
       let gx = x + w / 2;
       let gy = y + h / 2 + 8;
-      let fontSize = 24;
+      let fontSize = FONT_METRICS.singleNote;
 
       if (g.position === 'bottom-left') {
         gx = x + w * 0.35;
         gy = y + h * 0.78;
-        fontSize = 17;
+        fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'top-right') {
         gx = x + w * 0.65;
         gy = y + h * 0.42;
-        fontSize = 17;
+        fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'bottom-right') {
         gx = x + w * 0.7;
         gy = y + h * 0.78;
-        fontSize = 15;
+        fontSize = FONT_METRICS.triadNote;
       } else if (g.position === 'center-left') {
         gx = x + w * 0.3;
         gy = y + h * 0.58;
-        fontSize = 15;
+        fontSize = FONT_METRICS.triadNote;
       }
 
       // Note Letter
       out += `<text x="${gx}" y="${gy}" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="${g.color}" text-anchor="middle">${g.letter}</text>\n`;
 
       // Octave diacritic
+      const sqHalf = FONT_METRICS.squareSize / 2;
       if (g.octaveMarker === 'star') {
-        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="${g.color}" text-anchor="middle">*</text>\n`;
+        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">*</text>\n`;
       } else if (g.octaveMarker === 'square') {
-        out += `<rect x="${gx - 3}" y="${gy - fontSize}" width="6" height="6" fill="${g.color}"/>\n`;
+        out += `<rect x="${gx - sqHalf}" y="${gy - fontSize}" width="${FONT_METRICS.squareSize}" height="${FONT_METRICS.squareSize}" fill="${g.color}"/>\n`;
       } else if (g.octaveMarker === 'plus') {
-        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="${g.color}" text-anchor="middle">+</text>\n`;
+        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">+</text>\n`;
       }
 
       // Accidental dot
       const approxCharWidth = fontSize * 0.6;
       if (g.accidental === 'sharp') {
-        out += `<circle cx="${gx + approxCharWidth / 2 + 5}" cy="${gy - fontSize * 0.72}" r="2.5" fill="#000000"/>\n`;
+        out += `<circle cx="${gx + approxCharWidth / 2 + 5}" cy="${gy - fontSize * 0.72}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
       } else if (g.accidental === 'flat') {
-        out += `<circle cx="${gx - approxCharWidth / 2 - 5}" cy="${gy - fontSize * 0.72}" r="2.5" fill="#000000"/>\n`;
+        out += `<circle cx="${gx - approxCharWidth / 2 - 5}" cy="${gy - fontSize * 0.72}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
       }
     }
   }

@@ -1,6 +1,7 @@
 import { PDFDocument, rgb, StandardFonts, RGB } from 'pdf-lib';
 import { Page, FingerColor, CellGlyph } from '../types/layout.js';
 import { ARROW_SVG_PATH, ARROW_METRICS, PAGE_METRICS } from './arrow.js';
+import { FONT_METRICS } from './typography.js';
 
 function hexToRgb(hex: FingerColor): RGB {
   const num = parseInt(hex.replace('#', ''), 16);
@@ -106,24 +107,24 @@ function renderCellHalf(
     } else if (g.kind === 'note') {
       let gx = x + w / 2;
       let gy = y + h / 2 - 8;
-      let fontSize = 24;
+      let fontSize = FONT_METRICS.singleNote;
 
       if (g.position === 'bottom-left') {
         gx = x + w * 0.35;
         gy = y + h * 0.22;
-        fontSize = 17;
+        fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'top-right') {
         gx = x + w * 0.65;
         gy = y + h * 0.58;
-        fontSize = 17;
+        fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'bottom-right') {
         gx = x + w * 0.7;
         gy = y + h * 0.22;
-        fontSize = 15;
+        fontSize = FONT_METRICS.triadNote;
       } else if (g.position === 'center-left') {
         gx = x + w * 0.3;
         gy = y + h * 0.42;
-        fontSize = 15;
+        fontSize = FONT_METRICS.triadNote;
       }
 
       const letterWidth = fontBold.widthOfTextAtSize(g.letter, fontSize);
@@ -140,23 +141,24 @@ function renderCellHalf(
         pdfPage.drawText('*', {
           x: gx - 3,
           y: gy + fontSize - 2,
-          size: 14,
+          size: FONT_METRICS.diacriticSize,
           font: fontRegular,
           color
         });
       } else if (g.octaveMarker === 'square') {
+        const sqHalf = FONT_METRICS.squareSize / 2;
         pdfPage.drawRectangle({
-          x: gx - 3,
+          x: gx - sqHalf,
           y: gy + fontSize,
-          width: 6,
-          height: 6,
+          width: FONT_METRICS.squareSize,
+          height: FONT_METRICS.squareSize,
           color
         });
       } else if (g.octaveMarker === 'plus') {
         pdfPage.drawText('+', {
           x: gx - 4,
           y: gy + fontSize - 2,
-          size: 14,
+          size: FONT_METRICS.diacriticSize,
           font: fontRegular,
           color
         });
@@ -167,14 +169,14 @@ function renderCellHalf(
         pdfPage.drawCircle({
           x: gx + letterWidth / 2 + 5,
           y: gy + fontSize * 0.72,
-          size: 2.5,
+          size: FONT_METRICS.dotRadius,
           color: rgb(0, 0, 0)
         });
       } else if (g.accidental === 'flat') {
         pdfPage.drawCircle({
           x: gx - letterWidth / 2 - 5,
           y: gy + fontSize * 0.72,
-          size: 2.5,
+          size: FONT_METRICS.dotRadius,
           color: rgb(0, 0, 0)
         });
       }
