@@ -6,13 +6,16 @@
  */
 export const FONT_METRICS = {
   /** Font size for a single note in a half-cell */
-  singleNote: 24,
+  singleNote: 32,
+
+  /** Vertical shift downwards in points for single note glyphs (positive = lower) */
+  singleNoteYOffset: 5,
 
   /** Font size for each note in a 2-note chord (dyad) */
-  dyadNote: 17,
+  dyadNote: 20,
 
   /** Font size for each note in a 3-note chord (triad) */
-  triadNote: 15,
+  triadNote: 16,
 
   /** Font size for '*' and '+' octave diacritic markers */
   diacriticSize: 14,

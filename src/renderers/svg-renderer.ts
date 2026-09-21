@@ -63,7 +63,7 @@ function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: n
       out += `</g>\n`;
     } else if (g.kind === 'note') {
       let gx = x + w / 2;
-      let gy = y + h / 2 + 8;
+      let gy = y + h / 2 + 8 + FONT_METRICS.singleNoteYOffset;
       let fontSize = FONT_METRICS.singleNote;
 
       if (g.position === 'bottom-left') {
