@@ -27,18 +27,19 @@ const demoScore: Score = {
     {
       number: 2,
       rightHand: [
-        // Chord dyad holding for 2 beats (4 cells) with 2-note diagonal positioning
-        { offset: 0.0, duration: 2.0, notes: ['B4', 'D5'], fingers: [1, 3] }
+        // Chord dyad holding for 2 beats: interval heuristic assigns 1, 3 (thumb + middle) for a 3rd
+        { offset: 0.0, duration: 2.0, notes: ['B4', 'D5'] }
       ],
       leftHand: [
-        { offset: 0.0, duration: 0.5, notes: ['D4'], fingers: [2] },
-        { offset: 0.5, duration: 0.5, notes: ['C4'], fingers: [1] },
-        { offset: 1.0, duration: 0.5, notes: ['B3'], fingers: [4] },
-        { offset: 1.5, duration: 0.5, notes: ['A3'], fingers: [3] },
-        { offset: 2.0, duration: 0.5, notes: ['G3'], fingers: [5] },
-        { offset: 2.5, duration: 0.5, notes: ['A3'], fingers: [3] },
-        { offset: 3.0, duration: 0.5, notes: ['B3'], fingers: [4] },
-        { offset: 3.5, duration: 0.5, notes: ['D4'], fingers: [2] }
+        // LH single notes in C-position: C4=1 (Red), B3=2 (Green), A3=3 (Orange), G3=4 (Blue), D4=2 (Green)
+        { offset: 0.0, duration: 0.5, notes: ['D4'] },
+        { offset: 0.5, duration: 0.5, notes: ['C4'] },
+        { offset: 1.0, duration: 0.5, notes: ['B3'] },
+        { offset: 1.5, duration: 0.5, notes: ['A3'] },
+        { offset: 2.0, duration: 0.5, notes: ['G3'] },
+        { offset: 2.5, duration: 0.5, notes: ['A3'] },
+        { offset: 3.0, duration: 0.5, notes: ['B3'] },
+        { offset: 3.5, duration: 0.5, notes: ['D4'] }
       ]
     },
     {

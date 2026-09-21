@@ -17,15 +17,39 @@ describe('Fingering Resolver', () => {
     expect(fingers).toEqual([1, 3]);
   });
 
-  it('assigns heuristic fingering for ascending RH notes', () => {
-    const fingers = resolveFingerings(['C4', 'E4', 'G4'], 'RH');
-    expect(fingers[0]).toBeLessThan(fingers[1]);
-    expect(fingers[1]).toBeLessThan(fingers[2]);
+  it('assigns C-home position fingerings for single notes', () => {
+    // RH C-position ascending: C=1 (Pink), D=2 (Green), E=3 (Orange), F=4 (Blue), G=5 (Purple)
+    expect(resolveFingerings(['C4'], 'RH')).toEqual([1]);
+    expect(resolveFingerings(['D4'], 'RH')).toEqual([2]);
+    expect(resolveFingerings(['E4'], 'RH')).toEqual([3]);
+    expect(resolveFingerings(['F4'], 'RH')).toEqual([4]);
+    expect(resolveFingerings(['G4'], 'RH')).toEqual([5]);
+
+    // LH C-position descending: C=1 (Red), B=2 (Green), A=3 (Orange), G=4 (Blue), F=5 (Purple)
+    expect(resolveFingerings(['C4'], 'LH')).toEqual([1]);
+    expect(resolveFingerings(['B3'], 'LH')).toEqual([2]);
+    expect(resolveFingerings(['A3'], 'LH')).toEqual([3]);
+    expect(resolveFingerings(['G3'], 'LH')).toEqual([4]);
+    expect(resolveFingerings(['F3'], 'LH')).toEqual([5]);
   });
 
-  it('assigns heuristic fingering for ascending LH notes (higher pitch = lower finger number)', () => {
-    const fingers = resolveFingerings(['C3', 'G3'], 'LH');
-    expect(fingers[0]).toBe(5); // Low note -> pinky
-    expect(fingers[1]).toBe(1); // High note -> thumb
+  it('assigns interval-aware fingering for dyads without explicit fingers', () => {
+    // Thirds (B-D, C-E) -> [1, 3] for RH, [3, 1] for LH
+    expect(resolveFingerings(['B4', 'D5'], 'RH')).toEqual([1, 3]);
+    expect(resolveFingerings(['C4', 'E4'], 'RH')).toEqual([1, 3]);
+    expect(resolveFingerings(['A3', 'C4'], 'LH')).toEqual([3, 1]);
+
+    // Seconds (C-D) -> [1, 2]
+    expect(resolveFingerings(['C4', 'D4'], 'RH')).toEqual([1, 2]);
+
+    // Fifths and Octaves -> [1, 5] for RH, [5, 1] for LH
+    expect(resolveFingerings(['C4', 'G4'], 'RH')).toEqual([1, 5]);
+    expect(resolveFingerings(['C3', 'G3'], 'LH')).toEqual([5, 1]);
+    expect(resolveFingerings(['C4', 'C5'], 'RH')).toEqual([1, 5]);
+  });
+
+  it('assigns natural root position fingering for triads (RH 1-3-5, LH 5-3-1)', () => {
+    expect(resolveFingerings(['C4', 'E4', 'G4'], 'RH')).toEqual([1, 3, 5]);
+    expect(resolveFingerings(['C3', 'E3', 'G3'], 'LH')).toEqual([5, 3, 1]);
   });
 });
