@@ -110,20 +110,20 @@ function renderCellHalf(
       let fontSize = FONT_METRICS.singleNote;
 
       if (g.position === 'bottom-left') {
-        gx = x + w * 0.35;
+        gx = x + w * 0.32;
         gy = y + h * 0.22;
         fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'top-right') {
-        gx = x + w * 0.65;
-        gy = y + h * 0.58;
+        gx = x + w * 0.68;
+        gy = y + h * 0.50;
         fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'bottom-right') {
-        gx = x + w * 0.7;
-        gy = y + h * 0.22;
+        gx = x + w * 0.70;
+        gy = y + h * 0.20;
         fontSize = FONT_METRICS.triadNote;
       } else if (g.position === 'center-left') {
-        gx = x + w * 0.3;
-        gy = y + h * 0.42;
+        gx = x + w * 0.30;
+        gy = y + h * 0.40;
         fontSize = FONT_METRICS.triadNote;
       }
 
@@ -136,46 +136,53 @@ function renderCellHalf(
         color
       });
 
-      // Octave diacritic
+      // Octave diacritic positioned with consistent clearance above letter top
+      const capHeight = fontSize * 0.72;
+      const letterTop = gy + capHeight;
+      const sqHalf = FONT_METRICS.squareSize / 2;
+
       if (g.octaveMarker === 'star') {
+        const starY = letterTop + FONT_METRICS.diacriticGap - 0.40 * FONT_METRICS.diacriticSize;
         pdfPage.drawText('*', {
           x: gx - 3,
-          y: gy + fontSize - 2,
+          y: starY,
           size: FONT_METRICS.diacriticSize,
           font: fontRegular,
           color
         });
       } else if (g.octaveMarker === 'square') {
-        const sqHalf = FONT_METRICS.squareSize / 2;
+        const rectY = letterTop + FONT_METRICS.diacriticGap;
         pdfPage.drawRectangle({
           x: gx - sqHalf,
-          y: gy + fontSize,
+          y: rectY,
           width: FONT_METRICS.squareSize,
           height: FONT_METRICS.squareSize,
           color
         });
       } else if (g.octaveMarker === 'plus') {
+        const plusY = letterTop + FONT_METRICS.diacriticGap - 0.15 * FONT_METRICS.diacriticSize;
         pdfPage.drawText('+', {
           x: gx - 4,
-          y: gy + fontSize - 2,
+          y: plusY,
           size: FONT_METRICS.diacriticSize,
           font: fontRegular,
           color
         });
       }
 
-      // Accidental dot
+      // Accidental dot vertically centered with the letter
+      const dotY = gy + capHeight * 0.5;
       if (g.accidental === 'sharp') {
         pdfPage.drawCircle({
           x: gx + letterWidth / 2 + 5,
-          y: gy + fontSize * 0.72,
+          y: dotY,
           size: FONT_METRICS.dotRadius,
           color: rgb(0, 0, 0)
         });
       } else if (g.accidental === 'flat') {
         pdfPage.drawCircle({
           x: gx - letterWidth / 2 - 5,
-          y: gy + fontSize * 0.72,
+          y: dotY,
           size: FONT_METRICS.dotRadius,
           color: rgb(0, 0, 0)
         });

@@ -23,6 +23,9 @@ export const FONT_METRICS = {
   /** Width and height in points for the '▪' octave square marker */
   squareSize: 6,
 
+  /** Distance in points between top of letter and octave diacritic */
+  diacriticGap: 3,
+
   /** Radius in points for the black sharp (•) and flat (•) accidental dots */
   dotRadius: 2.5
 };

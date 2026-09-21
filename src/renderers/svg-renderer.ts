@@ -67,42 +67,49 @@ function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: n
       let fontSize = FONT_METRICS.singleNote;
 
       if (g.position === 'bottom-left') {
-        gx = x + w * 0.35;
+        gx = x + w * 0.32;
         gy = y + h * 0.78;
         fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'top-right') {
-        gx = x + w * 0.65;
-        gy = y + h * 0.42;
+        gx = x + w * 0.68;
+        gy = y + h * 0.50;
         fontSize = FONT_METRICS.dyadNote;
       } else if (g.position === 'bottom-right') {
-        gx = x + w * 0.7;
-        gy = y + h * 0.78;
+        gx = x + w * 0.70;
+        gy = y + h * 0.80;
         fontSize = FONT_METRICS.triadNote;
       } else if (g.position === 'center-left') {
-        gx = x + w * 0.3;
-        gy = y + h * 0.58;
+        gx = x + w * 0.30;
+        gy = y + h * 0.60;
         fontSize = FONT_METRICS.triadNote;
       }
 
       // Note Letter
       out += `<text x="${gx}" y="${gy}" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="${g.color}" text-anchor="middle">${g.letter}</text>\n`;
 
-      // Octave diacritic
+      // Octave diacritic positioned with consistent clearance above letter top
+      const capHeight = fontSize * 0.72;
+      const letterTop = gy - capHeight;
       const sqHalf = FONT_METRICS.squareSize / 2;
+
       if (g.octaveMarker === 'star') {
-        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">*</text>\n`;
+        const starY = letterTop - FONT_METRICS.diacriticGap + 0.40 * FONT_METRICS.diacriticSize;
+        out += `<text x="${gx}" y="${starY.toFixed(2)}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">*</text>\n`;
       } else if (g.octaveMarker === 'square') {
-        out += `<rect x="${gx - sqHalf}" y="${gy - fontSize}" width="${FONT_METRICS.squareSize}" height="${FONT_METRICS.squareSize}" fill="${g.color}"/>\n`;
+        const rectY = letterTop - FONT_METRICS.diacriticGap - FONT_METRICS.squareSize;
+        out += `<rect x="${(gx - sqHalf).toFixed(2)}" y="${rectY.toFixed(2)}" width="${FONT_METRICS.squareSize}" height="${FONT_METRICS.squareSize}" fill="${g.color}"/>\n`;
       } else if (g.octaveMarker === 'plus') {
-        out += `<text x="${gx}" y="${gy - fontSize + 3}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">+</text>\n`;
+        const plusY = letterTop - FONT_METRICS.diacriticGap + 0.15 * FONT_METRICS.diacriticSize;
+        out += `<text x="${gx}" y="${plusY.toFixed(2)}" font-family="Helvetica, Arial, sans-serif" font-size="${FONT_METRICS.diacriticSize}" fill="${g.color}" text-anchor="middle">+</text>\n`;
       }
 
-      // Accidental dot
-      const approxCharWidth = fontSize * 0.6;
+      // Accidental dot vertically centered with the letter
+      const approxCharWidth = fontSize * 0.55;
+      const dotY = gy - capHeight * 0.5;
       if (g.accidental === 'sharp') {
-        out += `<circle cx="${gx + approxCharWidth / 2 + 5}" cy="${gy - fontSize * 0.72}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
+        out += `<circle cx="${(gx + approxCharWidth / 2 + 5).toFixed(2)}" cy="${dotY.toFixed(2)}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
       } else if (g.accidental === 'flat') {
-        out += `<circle cx="${gx - approxCharWidth / 2 - 5}" cy="${gy - fontSize * 0.72}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
+        out += `<circle cx="${(gx - approxCharWidth / 2 - 5).toFixed(2)}" cy="${dotY.toFixed(2)}" r="${FONT_METRICS.dotRadius}" fill="#000000"/>\n`;
       }
     }
   }
