@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { getFingerColor, resolveFingerings } from '../../src/core/fingering.js';
 
 describe('Fingering Resolver', () => {
-  it('maps finger numbers 1-5 to exact ring colors', () => {
-    expect(getFingerColor(1)).toBe('#D32F2F'); // Red
-    expect(getFingerColor(2)).toBe('#2E7D32'); // Green
+  it('maps finger numbers 1-5 to exact ring colors for LH (red thumb) and RH (pink thumb)', () => {
+    expect(getFingerColor(1, 'LH')).toBe('#D32F2F'); // Red for Left Hand thumb
+    expect(getFingerColor(1, 'RH')).toBe('#EC407A'); // Pink for Right Hand thumb
+    expect(getFingerColor(2, 'LH')).toBe('#2E7D32'); // Green
+    expect(getFingerColor(2, 'RH')).toBe('#2E7D32'); // Green
     expect(getFingerColor(3)).toBe('#FB8C00'); // Orange
     expect(getFingerColor(4)).toBe('#1976D2'); // Blue
     expect(getFingerColor(5)).toBe('#7B1FA2'); // Purple

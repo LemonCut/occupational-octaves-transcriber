@@ -14,7 +14,7 @@ function pitchToMidi(pitch: ScientificPitch): number {
   return (parseInt(octStr, 10) + 1) * 12 + semi;
 }
 
-export function layoutHandCell(notes: ScientificPitch[], fingers: number[]): NoteGlyph[] {
+export function layoutHandCell(notes: ScientificPitch[], fingers: number[], hand: 'RH' | 'LH' = 'RH'): NoteGlyph[] {
   if (notes.length === 0) return [];
 
   // Sort notes ascending by pitch
@@ -34,7 +34,7 @@ export function layoutHandCell(notes: ScientificPitch[], fingers: number[]): Not
 
   return items.map((item, idx) => {
     const parsed = parseScientificPitch(item.pitch);
-    const color = getFingerColor(item.finger);
+    const color = getFingerColor(item.finger, hand);
     const position = positions[idx] || 'center';
 
     return {

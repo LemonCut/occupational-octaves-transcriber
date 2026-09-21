@@ -33,7 +33,7 @@ export function allocateScore(score: Score): Page[] {
         const startCell = Math.round(ev.offset / cellDuration);
         const span = Math.max(1, Math.round(ev.duration / cellDuration));
         const fingers = resolveFingerings(ev.notes, hand, ev.fingers);
-        const noteGlyphs = layoutHandCell(ev.notes, fingers);
+        const noteGlyphs = layoutHandCell(ev.notes, fingers, hand);
 
         if (startCell < cellsPerMeasure) {
           slots[startCell].push(...noteGlyphs);
@@ -42,7 +42,7 @@ export function allocateScore(score: Score): Page[] {
         // Add sustain arrows in subsequent cells
         for (let s = 1; s < span && startCell + s < cellsPerMeasure; s++) {
           for (let n = 0; n < ev.notes.length; n++) {
-            const color = getFingerColor(fingers[n]);
+            const color = getFingerColor(fingers[n], hand);
             slots[startCell + s].push({
               kind: 'arrow',
               color,

@@ -1,7 +1,7 @@
 import { ScientificPitch } from '../types/score.js';
 import { FingerColor } from '../types/layout.js';
 
-const FINGER_COLORS: Record<number, FingerColor> = {
+const FINGER_COLORS_LH: Record<number, FingerColor> = {
   1: '#D32F2F', // Red (Thumb)
   2: '#2E7D32', // Green (Index)
   3: '#FB8C00', // Orange (Middle)
@@ -9,8 +9,17 @@ const FINGER_COLORS: Record<number, FingerColor> = {
   5: '#7B1FA2'  // Purple (Pinky)
 };
 
-export function getFingerColor(finger: number): FingerColor {
-  return FINGER_COLORS[finger] || '#D32F2F';
+const FINGER_COLORS_RH: Record<number, FingerColor> = {
+  1: '#EC407A', // Pink (Thumb)
+  2: '#2E7D32', // Green (Index)
+  3: '#FB8C00', // Orange (Middle)
+  4: '#1976D2', // Blue (Ring)
+  5: '#7B1FA2'  // Purple (Pinky)
+};
+
+export function getFingerColor(finger: number, hand: 'RH' | 'LH' = 'LH'): FingerColor {
+  const table = hand === 'RH' ? FINGER_COLORS_RH : FINGER_COLORS_LH;
+  return table[finger] || (hand === 'RH' ? '#EC407A' : '#D32F2F');
 }
 
 function pitchToMidi(pitch: ScientificPitch): number {
