@@ -78,15 +78,15 @@ function renderCellHalf(
     const color = hexToRgb(g.color);
 
     if (g.kind === 'arrow') {
-      let arrowWidth = 44;
+      let arrowWidth = 46;
       let targetCenterY = y + h / 2;
 
       if (arrowCount === 2) {
-        arrowWidth = 36;
+        arrowWidth = 38;
         // In PDF (+Y up): slot 0 is top (0.65), slot 1 is bottom (0.35)
         targetCenterY = g.verticalSlot === 0 ? y + h * 0.65 : y + h * 0.35;
       } else if (arrowCount >= 3) {
-        arrowWidth = 30;
+        arrowWidth = 32;
         if (g.verticalSlot === 0) targetCenterY = y + h * 0.78;
         else if (g.verticalSlot === 1) targetCenterY = y + h * 0.50;
         else targetCenterY = y + h * 0.22;

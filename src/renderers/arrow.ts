@@ -1,8 +1,8 @@
-// Converted from assets/right_arrow.svg (viewBox: 0 0 164.48 75.33)
-export const ARROW_SVG_PATH = 'M 164.48 37.67 L 113.63 75.33 L 113.63 51.09 L 0 51.09 L 0 24.24 L 113.63 24.24 L 113.63 0 L 164.48 37.67 Z';
+// Converted from assets/right_arrow.svg (viewBox: 0 0 201.42 75.33)
+export const ARROW_SVG_PATH = 'M 201.42 37.67 L 157.52 75.33 L 157.52 51.09 L 0 51.09 L 0 24.24 L 157.52 24.24 L 157.52 0 L 201.42 37.67 Z';
 
 export const ARROW_METRICS = {
-  originalWidth: 164.48,
+  originalWidth: 201.42,
   originalHeight: 75.33,
   centerY: 37.66
 };
