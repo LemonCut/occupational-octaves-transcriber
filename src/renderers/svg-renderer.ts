@@ -37,6 +37,7 @@ export function renderPageToSvg(page: Page): string {
 function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: number): string {
   let out = '';
   const arrowCount = glyphs.filter(g => g.kind === 'arrow').length;
+  const noteCount = glyphs.filter(g => g.kind === 'note').length;
 
   for (const g of glyphs) {
     if (g.kind === 'arrow') {
@@ -66,22 +67,27 @@ function renderGlyphs(glyphs: CellGlyph[], x: number, y: number, w: number, h: n
       let gy = y + h / 2 + 8 + FONT_METRICS.singleNoteYOffset;
       let fontSize = FONT_METRICS.singleNote;
 
-      if (g.position === 'bottom-left') {
-        gx = x + w * 0.32;
-        gy = y + h * 0.78;
+      if (noteCount === 2) {
         fontSize = FONT_METRICS.dyadNote;
-      } else if (g.position === 'top-right') {
-        gx = x + w * 0.68;
-        gy = y + h * 0.50;
-        fontSize = FONT_METRICS.dyadNote;
-      } else if (g.position === 'bottom-right') {
-        gx = x + w * 0.70;
-        gy = y + h * 0.80;
+        if (g.position === 'bottom-left') {
+          gx = x + w * 0.32;
+          gy = y + h * 0.78;
+        } else if (g.position === 'top-right') {
+          gx = x + w * 0.68;
+          gy = y + h * 0.50;
+        }
+      } else if (noteCount >= 3) {
         fontSize = FONT_METRICS.triadNote;
-      } else if (g.position === 'center-left') {
-        gx = x + w * 0.30;
-        gy = y + h * 0.60;
-        fontSize = FONT_METRICS.triadNote;
+        if (g.position === 'top-right') {
+          gx = x + w * 0.70;
+          gy = y + h * 0.40;
+        } else if (g.position === 'center-left') {
+          gx = x + w * 0.30;
+          gy = y + h * 0.60;
+        } else if (g.position === 'bottom-right') {
+          gx = x + w * 0.70;
+          gy = y + h * 0.80;
+        }
       }
 
       // Note Letter

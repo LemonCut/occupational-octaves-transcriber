@@ -40,6 +40,23 @@ const demoScore: Score = {
         { offset: 3.0, duration: 0.5, notes: ['B3'], fingers: [4] },
         { offset: 3.5, duration: 0.5, notes: ['D4'], fingers: [2] }
       ]
+    },
+    {
+      number: 3,
+      // Measure 3 demonstrating triads & non-explicit (heuristic) fingerings
+      rightHand: [
+        // RH Triad holding for 2 beats: no explicit fingers -> heuristic assigns 1, 3, 5 (Pink, Orange, Purple)
+        // Propagates 3 sustain arrows sorted by pitch (slot 0 top = D5, slot 1 mid = B4, slot 2 bot = G4)
+        { offset: 0.0, duration: 2.0, notes: ['G4', 'B4', 'D5'] },
+        // C Major triad in higher octave
+        { offset: 2.0, duration: 2.0, notes: ['C5', 'E5', 'G5'] }
+      ],
+      leftHand: [
+        // LH Triad holding for 2 beats: no explicit fingers -> heuristic assigns 5, 3, 1 (Purple, Orange, Red)
+        // With '▪' square octave markers on G2 & B2
+        { offset: 0.0, duration: 2.0, notes: ['G2', 'B2', 'D3'] },
+        { offset: 2.0, duration: 2.0, notes: ['C3', 'E3', 'G3'] }
+      ]
     }
   ]
 };

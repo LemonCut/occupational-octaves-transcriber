@@ -74,6 +74,7 @@ function renderCellHalf(
   fontRegular: any
 ) {
   const arrowCount = glyphs.filter(g => g.kind === 'arrow').length;
+  const noteCount = glyphs.filter(g => g.kind === 'note').length;
 
   for (const g of glyphs) {
     const color = hexToRgb(g.color);
@@ -109,22 +110,27 @@ function renderCellHalf(
       let gy = y + h / 2 - 8 - FONT_METRICS.singleNoteYOffset;
       let fontSize = FONT_METRICS.singleNote;
 
-      if (g.position === 'bottom-left') {
-        gx = x + w * 0.32;
-        gy = y + h * 0.22;
+      if (noteCount === 2) {
         fontSize = FONT_METRICS.dyadNote;
-      } else if (g.position === 'top-right') {
-        gx = x + w * 0.68;
-        gy = y + h * 0.50;
-        fontSize = FONT_METRICS.dyadNote;
-      } else if (g.position === 'bottom-right') {
-        gx = x + w * 0.70;
-        gy = y + h * 0.20;
+        if (g.position === 'bottom-left') {
+          gx = x + w * 0.32;
+          gy = y + h * 0.22;
+        } else if (g.position === 'top-right') {
+          gx = x + w * 0.68;
+          gy = y + h * 0.50;
+        }
+      } else if (noteCount >= 3) {
         fontSize = FONT_METRICS.triadNote;
-      } else if (g.position === 'center-left') {
-        gx = x + w * 0.30;
-        gy = y + h * 0.40;
-        fontSize = FONT_METRICS.triadNote;
+        if (g.position === 'top-right') {
+          gx = x + w * 0.70;
+          gy = y + h * 0.60;
+        } else if (g.position === 'center-left') {
+          gx = x + w * 0.30;
+          gy = y + h * 0.40;
+        } else if (g.position === 'bottom-right') {
+          gx = x + w * 0.70;
+          gy = y + h * 0.20;
+        }
       }
 
       const letterWidth = fontBold.widthOfTextAtSize(g.letter, fontSize);
