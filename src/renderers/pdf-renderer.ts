@@ -1,5 +1,6 @@
 import { PDFDocument, rgb, StandardFonts, RGB } from 'pdf-lib';
 import { Page, FingerColor, CellGlyph } from '../types/layout.js';
+import { ARROW_SVG_PATH, ARROW_METRICS, PAGE_METRICS } from './arrow.js';
 
 function hexToRgb(hex: FingerColor): RGB {
   const num = parseInt(hex.replace('#', ''), 16);
@@ -11,12 +12,7 @@ export async function renderPagesToPdf(pages: Page[]): Promise<Uint8Array> {
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
   const fontRegular = await doc.embedFont(StandardFonts.Helvetica);
 
-  const pageWidth = 612; // Letter
-  const pageHeight = 792;
-  const margin = 36;
-  const systemHeight = 120;
-  const systemGap = 30;
-  const colWidth = (pageWidth - 2 * margin) / 8;
+  const { pageWidth, pageHeight, margin, systemHeight, systemGap, colWidth, halfCellHeight } = PAGE_METRICS;
 
   for (const pageModel of pages) {
     const pdfPage = doc.addPage([pageWidth, pageHeight]);
@@ -36,8 +32,8 @@ export async function renderPagesToPdf(pages: Page[]): Promise<Uint8Array> {
 
       // Horizontal line dividing RH & LH
       pdfPage.drawLine({
-        start: { x: margin, y: yTop + systemHeight / 2 },
-        end: { x: pageWidth - margin, y: yTop + systemHeight / 2 },
+        start: { x: margin, y: yTop + halfCellHeight },
+        end: { x: pageWidth - margin, y: yTop + halfCellHeight },
         color: rgb(0, 0, 0),
         thickness: 1
       });
@@ -55,10 +51,10 @@ export async function renderPagesToPdf(pages: Page[]): Promise<Uint8Array> {
           });
         }
 
-        // Render RH (upper half: yTop + systemHeight/2 to yTop + systemHeight)
-        renderCellHalf(cell.rightHand.glyphs, xLeft, yTop + systemHeight / 2, colWidth, systemHeight / 2, pdfPage, fontBold, fontRegular);
-        // Render LH (lower half: yTop to yTop + systemHeight/2)
-        renderCellHalf(cell.leftHand.glyphs, xLeft, yTop, colWidth, systemHeight / 2, pdfPage, fontBold, fontRegular);
+        // Render RH (upper half: yTop + halfCellHeight to yTop + systemHeight)
+        renderCellHalf(cell.rightHand.glyphs, xLeft, yTop + halfCellHeight, colWidth, halfCellHeight, pdfPage, fontBold, fontRegular);
+        // Render LH (lower half: yTop to yTop + halfCellHeight)
+        renderCellHalf(cell.leftHand.glyphs, xLeft, yTop, colWidth, halfCellHeight, pdfPage, fontBold, fontRegular);
       });
     });
   }
@@ -76,29 +72,36 @@ function renderCellHalf(
   fontBold: any,
   fontRegular: any
 ) {
+  const arrowCount = glyphs.filter(g => g.kind === 'arrow').length;
+
   for (const g of glyphs) {
     const color = hexToRgb(g.color);
 
     if (g.kind === 'arrow') {
-      const arrowY = y + h / 2;
-      pdfPage.drawLine({
-        start: { x: x + 10, y: arrowY },
-        end: { x: x + w - 10, y: arrowY },
-        color,
-        thickness: 2.5
-      });
-      // Arrowhead
-      pdfPage.drawLine({
-        start: { x: x + w - 18, y: arrowY + 4 },
-        end: { x: x + w - 10, y: arrowY },
-        color,
-        thickness: 2.5
-      });
-      pdfPage.drawLine({
-        start: { x: x + w - 18, y: arrowY - 4 },
-        end: { x: x + w - 10, y: arrowY },
-        color,
-        thickness: 2.5
+      let arrowWidth = 34;
+      let targetCenterY = y + h / 2;
+
+      if (arrowCount === 2) {
+        arrowWidth = 28;
+        // In PDF (+Y up): slot 0 is top (0.65), slot 1 is bottom (0.35)
+        targetCenterY = g.verticalSlot === 0 ? y + h * 0.65 : y + h * 0.35;
+      } else if (arrowCount >= 3) {
+        arrowWidth = 24;
+        if (g.verticalSlot === 0) targetCenterY = y + h * 0.78;
+        else if (g.verticalSlot === 1) targetCenterY = y + h * 0.50;
+        else targetCenterY = y + h * 0.22;
+      }
+
+      const scale = arrowWidth / ARROW_METRICS.originalWidth;
+      const arrowX = x + (w - arrowWidth) / 2;
+      // In pdf-lib drawSvgPath, y is the top-left of the SVG path, which extends downwards by originalHeight * scale
+      const arrowY = targetCenterY + ARROW_METRICS.centerY * scale;
+
+      pdfPage.drawSvgPath(ARROW_SVG_PATH, {
+        x: arrowX,
+        y: arrowY,
+        scale,
+        color
       });
     } else if (g.kind === 'note') {
       let gx = x + w / 2;
@@ -107,19 +110,19 @@ function renderCellHalf(
 
       if (g.position === 'bottom-left') {
         gx = x + w * 0.35;
-        gy = y + h * 0.25;
+        gy = y + h * 0.22;
         fontSize = 17;
       } else if (g.position === 'top-right') {
         gx = x + w * 0.65;
-        gy = y + h * 0.6;
+        gy = y + h * 0.58;
         fontSize = 17;
       } else if (g.position === 'bottom-right') {
         gx = x + w * 0.7;
-        gy = y + h * 0.25;
+        gy = y + h * 0.22;
         fontSize = 15;
       } else if (g.position === 'center-left') {
         gx = x + w * 0.3;
-        gy = y + h * 0.45;
+        gy = y + h * 0.42;
         fontSize = 15;
       }
 
@@ -163,14 +166,14 @@ function renderCellHalf(
       if (g.accidental === 'sharp') {
         pdfPage.drawCircle({
           x: gx + letterWidth / 2 + 5,
-          y: gy + fontSize * 0.75,
+          y: gy + fontSize * 0.72,
           size: 2.5,
           color: rgb(0, 0, 0)
         });
       } else if (g.accidental === 'flat') {
         pdfPage.drawCircle({
           x: gx - letterWidth / 2 - 5,
-          y: gy + fontSize * 0.75,
+          y: gy + fontSize * 0.72,
           size: 2.5,
           color: rgb(0, 0, 0)
         });
