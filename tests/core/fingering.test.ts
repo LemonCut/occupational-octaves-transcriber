@@ -34,8 +34,8 @@ describe('Fingering Resolver', () => {
   });
 
   it('assigns interval-aware fingering for dyads without explicit fingers', () => {
-    // Thirds (B-D, C-E) -> [1, 3] for RH, [3, 1] for LH
-    expect(resolveFingerings(['B4', 'D5'], 'RH')).toEqual([1, 3]);
+    // Thirds: B-D -> [1, 2] (pointer on D), C-E -> [1, 3] (middle on E)
+    expect(resolveFingerings(['B4', 'D5'], 'RH')).toEqual([1, 2]);
     expect(resolveFingerings(['C4', 'E4'], 'RH')).toEqual([1, 3]);
     expect(resolveFingerings(['A3', 'C4'], 'LH')).toEqual([3, 1]);
 

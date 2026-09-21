@@ -14,14 +14,15 @@ const demoScore: Score = {
       number: 1,
       rightHand: [],
       leftHand: [
-        { offset: 0.0, duration: 0.5, notes: ['G2'], fingers: [5] },
-        { offset: 0.5, duration: 0.5, notes: ['B2'], fingers: [4] },
-        { offset: 1.0, duration: 0.5, notes: ['G3'], fingers: [1] },
-        { offset: 1.5, duration: 0.5, notes: ['A3'], fingers: [3] },
-        { offset: 2.0, duration: 0.5, notes: ['B3'], fingers: [4] },
-        { offset: 2.5, duration: 0.5, notes: ['A3'], fingers: [3] },
-        { offset: 3.0, duration: 0.5, notes: ['G3'], fingers: [5] },
-        { offset: 3.5, duration: 0.5, notes: ['E4'], fingers: [1] }
+        // LH single notes in C-position: G=4 (Blue), B=2 (Green), A=3 (Orange), E=5 (Purple)
+        { offset: 0.0, duration: 0.5, notes: ['G2'] },
+        { offset: 0.5, duration: 0.5, notes: ['B2'] },
+        { offset: 1.0, duration: 0.5, notes: ['G3'] },
+        { offset: 1.5, duration: 0.5, notes: ['A3'] },
+        { offset: 2.0, duration: 0.5, notes: ['B3'] },
+        { offset: 2.5, duration: 0.5, notes: ['A3'] },
+        { offset: 3.0, duration: 0.5, notes: ['G3'] },
+        { offset: 3.5, duration: 0.5, notes: ['E4'] }
       ]
     },
     {

@@ -107,9 +107,16 @@ export function resolveFingerings(
         assigned[indexed[0].origIndex] = 1;
         assigned[indexed[1].origIndex] = 2;
       } else if (semitones <= 4) {
-        // Thirds (e.g. B-D, C-E) -> [1, 3]
-        assigned[indexed[0].origIndex] = 1;
-        assigned[indexed[1].origIndex] = 3;
+        // Thirds: B-D uses [1, 2] (pointer on D), C-E uses [1, 3] (middle on E)
+        const l0 = getPitchLetter(indexed[0].pitch);
+        const l1 = getPitchLetter(indexed[1].pitch);
+        if (l0 === 'B' && l1 === 'D') {
+          assigned[indexed[0].origIndex] = 1;
+          assigned[indexed[1].origIndex] = 2;
+        } else {
+          assigned[indexed[0].origIndex] = 1;
+          assigned[indexed[1].origIndex] = 3;
+        }
       } else if (semitones <= 6) {
         // Fourths (e.g. C-F) -> [1, 4]
         assigned[indexed[0].origIndex] = 1;
